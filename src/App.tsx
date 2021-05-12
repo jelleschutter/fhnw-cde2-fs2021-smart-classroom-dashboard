@@ -11,6 +11,7 @@ import { Filter } from './features/graph/Filter';
 import { Chart } from './features/graph/Chart';
 import { Login } from './features/auth/Login';
 import { AuthState, RootState } from './model/State';
+import { Logout } from './features/auth/Logout';
 
 function App() {
 
@@ -27,7 +28,7 @@ function App() {
       <Router>
         <Switch>
           <Route path="/logout">
-            <h1>Logout</h1>
+            <Logout />
           </Route>
           <Route path="/">
             <Filter onSensorChange={setSensor} />
