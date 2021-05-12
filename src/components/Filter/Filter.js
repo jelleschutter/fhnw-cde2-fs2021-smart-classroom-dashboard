@@ -1,59 +1,56 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-class Filter extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      sensor: '',
-      items: []
-    };
+import { logout } from '../../features/auth/authSlice';
 
-    this.handleChange = this.handleChange.bind(this);
-  }
+export const Filter = ({ onSensorChange }) => {
 
-  componentDidMount() {
-    const url = `https://glusfqycvwrucp9-db202012181437.adb.eu-zurich-1.oraclecloudapps.com/ords/sensor_datalake/sens/sensors?q={"$orderby":{"title":"asc"}}`;
-    const headers = new Headers();
-    headers.set('Authorization', `Basic ${this.props.token}`);
-    fetch(url, {
-      method: 'GET',
-      headers
-    })
-      .then(result => {
-        if (result.ok) {
-          return result.json();
-        }
-        this.props.setToken(false);
-        return Promise.reject(new Error(result.statusText));
+  const [items, setItems] = useState([]);
+
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+  const triggerSensorChange = useCallback(onSensorChange, [onSensorChange]);
+
+  useEffect(() => {
+    if (auth.loggedIn) {
+      const url = `https://glusfqycvwrucp9-db202012181437.adb.eu-zurich-1.oraclecloudapps.com/ords/sensor_datalake/sens/sensors?q={"$orderby":{"title":"asc"}}`;
+      const headers = new Headers();
+      headers.set('Authorization', `Basic ${auth.token}`);
+      fetch(url, {
+        method: 'GET',
+        headers
       })
-      .then((result) => {
-        const sensor = result.items[0]?.uuid ?? '';
-        this.setState({
-          sensor: sensor,
-          items: result.items
+        .then(result => {
+          if (result.ok) {
+            return result.json();
+          }
+          dispatch(
+            logout()
+          );
+          return Promise.reject(new Error(result.statusText));
+        })
+        .then((result) => {
+          const sensor = result.items[0]?.uuid ?? '';
+          setItems(result.items);
+          triggerSensorChange(sensor);
+        })
+        .catch((error) => {
+          console.log(error);
+          triggerSensorChange('');
         });
-        this.props.onSensorChange(sensor);
-      })
-      .catch((error) => console.log(error));
+    } else {
+      setItems([]);
+    }
+  }, [dispatch, triggerSensorChange, auth]);
+
+  const handleChange = (event) => {
+    triggerSensorChange(event.target.value);
   }
 
-  handleChange(event) {
-    this.setState((state) => {
-      state.sensor = event.target.value;
-      return state;
-    });
-    this.props.onSensorChange(event.target.value);
-  }
-
-  render() {
-    const { items } = this.state;
-    const options = items.map(sensor => <option key={sensor.uuid} value={sensor.uuid}>{sensor.title}</option>)
-    return (
-      <select onChange={this.handleChange}>
-        {options}
-      </select>
-    )
-  }
+  const options = items.map(sensor => <option key={sensor.uuid} value={sensor.uuid}>{sensor.title}</option>)
+  return (
+    <select onChange={handleChange}>
+      {options}
+    </select>
+  )
 }
-
-export default Filter;
