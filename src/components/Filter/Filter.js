@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { logout } from '../../features/auth/authSlice';
@@ -9,7 +9,6 @@ export const Filter = ({ onSensorChange }) => {
 
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
-  const triggerSensorChange = useCallback(onSensorChange, [onSensorChange]);
 
   useEffect(() => {
     if (auth.loggedIn) {
@@ -32,19 +31,19 @@ export const Filter = ({ onSensorChange }) => {
         .then((result) => {
           const sensor = result.items[0]?.uuid ?? '';
           setItems(result.items);
-          triggerSensorChange(sensor);
+          onSensorChange(sensor);
         })
         .catch((error) => {
           console.log(error);
-          triggerSensorChange('');
+          onSensorChange('');
         });
     } else {
       setItems([]);
     }
-  }, [dispatch, triggerSensorChange, auth]);
+  }, [dispatch, onSensorChange, auth]);
 
   const handleChange = (event) => {
-    triggerSensorChange(event.target.value);
+    onSensorChange(event.target.value);
   }
 
   const options = items.map(sensor => <option key={sensor.uuid} value={sensor.uuid}>{sensor.title}</option>)
