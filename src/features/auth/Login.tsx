@@ -9,8 +9,8 @@ export const Login = () => {
   const [password, setPassword] = useState('');
   const dispatch = useDispatch();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = (event: React.SyntheticEvent) => {
+    event.preventDefault();
     dispatch(
       login(btoa(`${username}:${password}`))
     )

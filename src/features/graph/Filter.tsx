@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { logout } from '../../features/auth/authSlice';
+import { logout } from '../auth/authSlice';
+import { Sensor } from '../../model/Sensor';
+import { AuthState, RootState } from '../../model/State';
 
-export const Filter = ({ onSensorChange }) => {
+type Props = {
+  onSensorChange: (sensor: string) => void
+}
 
-  const [items, setItems] = useState([]);
+export const Filter = ({ onSensorChange }: Props) => {
+
+  const [items, setItems] = useState<Sensor[]>([]);
 
   const dispatch = useDispatch();
-  const auth = useSelector((state) => state.auth);
+  const auth = useSelector<RootState, AuthState>((state) => state.auth);
 
   useEffect(() => {
     if (auth.loggedIn) {
@@ -42,8 +48,8 @@ export const Filter = ({ onSensorChange }) => {
     }
   }, [dispatch, onSensorChange, auth]);
 
-  const handleChange = (event) => {
-    onSensorChange(event.target.value);
+  const handleChange = (event: React.FormEvent<HTMLSelectElement>) => {
+    onSensorChange(event.currentTarget.value);
   }
 
   const options = items.map(sensor => <option key={sensor.uuid} value={sensor.uuid}>{sensor.title}</option>)

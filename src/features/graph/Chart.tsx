@@ -1,14 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Line } from 'react-chartjs-2';
 import 'chartjs-adapter-moment';
 
-import { logout } from '../../features/auth/authSlice';
+import { logout } from '../auth/authSlice';
+import { AuthState, RootState } from '../../model/State';
+import { Measurement } from '../../model/Measurement';
 
-export const Chart = (props) => {
+type Props = {
+  sensor: string
+}
 
-  const [items, setItems] = useState([]);
-  const auth = useSelector((state) => state.auth);
+export const Chart = (props: Props) => {
+
+  const [items, setItems] = useState<Measurement[]>([]);
+  const auth = useSelector<RootState, AuthState>((state) => state.auth);
   const dispatch = useDispatch();
 
   const fetchData = () => {

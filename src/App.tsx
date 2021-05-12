@@ -7,15 +7,16 @@ import {
 } from 'react-router-dom';
 
 import './App.css';
-import { Filter } from './components/Filter/Filter';
-import { Chart } from './components/Chart/Chart';
+import { Filter } from './features/graph/Filter';
+import { Chart } from './features/graph/Chart';
 import { Login } from './features/auth/Login';
+import { AuthState, RootState } from './model/State';
 
 function App() {
 
   const [sensor, setSensor] = useState('');
 
-  const auth = useSelector((state) => state.auth);
+  const auth = useSelector<RootState, AuthState>((state) => state.auth);
 
   if (!auth.loggedIn) {
     return <Login />
