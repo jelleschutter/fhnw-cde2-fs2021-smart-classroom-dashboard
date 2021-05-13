@@ -3,10 +3,12 @@ import { useSelector } from 'react-redux';
 import {
   BrowserRouter as Router,
   Switch,
-  Route
+  Route,
+  Link
 } from 'react-router-dom';
+import { Button, createMuiTheme, CssBaseline, ThemeProvider, useMediaQuery } from '@material-ui/core';
 
-import './App.css';
+import './App.scss';
 import { Filter } from './features/graph/Filter';
 import { Chart } from './features/graph/Chart';
 import { Login } from './features/auth/Login';
@@ -19,12 +21,31 @@ function App() {
 
   const auth = useSelector<RootState, AuthState>((state) => state.auth);
 
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+
+  const theme = React.useMemo(
+    () =>
+      createMuiTheme({
+        palette: {
+          type: prefersDarkMode ? 'dark' : 'light',
+        },
+      }),
+    [prefersDarkMode],
+  );
+
+
   if (!auth.loggedIn) {
-    return <Login />
+    return (
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Login />
+      </ThemeProvider>
+    )
   }
 
   return (
-    <div className="wrapper">
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       <Router>
         <Switch>
           <Route path="/logout">
@@ -32,11 +53,12 @@ function App() {
           </Route>
           <Route path="/">
             <Filter onSensorChange={setSensor} />
+            <Button component={Link} to="/logout">Logout</Button>
             <Chart sensor={sensor} />
           </Route>
         </Switch>
       </Router>
-    </div>
+    </ThemeProvider>
   )
 }
 

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
+import './Login.scss';
 import { login } from './authSlice';
+import { Button, TextField } from '@material-ui/core';
 
 export const Login = () => {
 
@@ -19,17 +21,9 @@ export const Login = () => {
   return (
     <div className="login-wrapper">
       <form onSubmit={handleSubmit}>
-        <label>
-          <p>Username</p>
-          <input type="text" onChange={(e) => setUsername(e.target.value)} />
-        </label>
-        <label>
-          <p>Password</p>
-          <input type="password" onChange={(e) => setPassword(e.target.value)} />
-        </label>
-        <div>
-          <button type="submit">Login</button>
-        </div>
+        <TextField label="Username" onChange={(e) => setUsername(e.target.value)} />
+        <TextField type="password" label="Password" onChange={(e) => setPassword(e.target.value)} />
+        <Button type="submit">Login</Button>
       </form>
     </div>
   );

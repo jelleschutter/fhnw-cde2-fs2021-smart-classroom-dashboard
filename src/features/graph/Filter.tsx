@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../auth/authSlice';
 import { Sensor } from '../../model/Sensor';
 import { AuthState, RootState } from '../../model/State';
+import { MenuItem, Select } from '@material-ui/core';
 
 type Props = {
   onSensorChange: (sensor: string) => void
@@ -12,6 +13,7 @@ type Props = {
 export const Filter = ({ onSensorChange }: Props) => {
 
   const [items, setItems] = useState<Sensor[]>([]);
+  const [sensor, setSensor] = useState('');
 
   const dispatch = useDispatch();
   const auth = useSelector<RootState, AuthState>((state) => state.auth);
@@ -38,24 +40,28 @@ export const Filter = ({ onSensorChange }: Props) => {
           const sensor = result.items[0]?.uuid ?? '';
           setItems(result.items);
           onSensorChange(sensor);
+          setSensor(sensor);
         })
         .catch((error) => {
           console.log(error);
           onSensorChange('');
+          setSensor('');
         });
     } else {
       setItems([]);
     }
   }, [dispatch, onSensorChange, auth]);
 
-  const handleChange = (event: React.FormEvent<HTMLSelectElement>) => {
-    onSensorChange(event.currentTarget.value);
+  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+    const sensor = event.target.value as string;
+    onSensorChange(sensor);
+    setSensor(sensor);
   }
 
-  const options = items.map(sensor => <option key={sensor.uuid} value={sensor.uuid}>{sensor.title}</option>)
+  const options = items.map(sensor => <MenuItem key={sensor.uuid} value={sensor.uuid}>{sensor.title}</MenuItem>)
   return (
-    <select onChange={handleChange}>
+    <Select value={sensor} onChange={handleChange}>
       {options}
-    </select>
+    </Select>
   )
 }
