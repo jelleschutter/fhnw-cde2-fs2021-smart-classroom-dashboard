@@ -1,22 +1,20 @@
-import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
   BrowserRouter as Router,
   Switch,
-  Route
+  Route,
+  Redirect
 } from 'react-router-dom';
 
 import './App.scss';
-import { Filter } from './features/graph/Filter';
-import { Chart } from './features/graph/Chart';
+import { Explore } from './features/explore/Explore';
 import { Login } from './features/auth/Login';
 import { AuthState, RootState } from './model/State';
 import { Logout } from './features/auth/Logout';
 import { CustomAppBar } from './features/nav/CustomAppBar';
+import { Dashboard } from './features/dashboard/Dashboard';
 
 function App() {
-
-  const [sensor, setSensor] = useState('');
 
   const auth = useSelector<RootState, AuthState>((state) => state.auth);
 
@@ -33,9 +31,14 @@ function App() {
         <Route path="/logout">
           <Logout />
         </Route>
+        <Route path="/dashboard">
+          <Dashboard />
+        </Route>
+        <Route path="/explore/:uuid">
+          <Explore />
+        </Route>
         <Route path="/">
-          <Filter onSensorChange={setSensor} />
-          <Chart sensor={sensor} />
+          <Redirect to="/dashboard" />
         </Route>
       </Switch>
     </Router>

@@ -17,6 +17,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     title: {
       flexGrow: 1,
+      color: 'inherit',
+      textDecoration: 'none'
     },
   }),
 );
@@ -31,7 +33,7 @@ export const CustomAppBar = () => {
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" className={classes.title}>Smart Classroom</Typography>
+          <Typography component={Link} variant="h6" className={classes.title} to="/dashboard">Smart Classroom</Typography>
           <Button component={Link} color="inherit" to="/logout">Logout</Button>
         </Toolbar>
       </AppBar>
