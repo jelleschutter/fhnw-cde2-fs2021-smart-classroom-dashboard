@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Line } from 'react-chartjs-2';
+import ChartComponent from 'react-chartjs-2';
 import 'chartjs-adapter-moment';
 
 import { logout } from '../auth/authSlice';
@@ -109,7 +109,7 @@ export const Chart = (props: Props) => {
 
   return (
     <div className="Chart">
-      <Line data={data} options={options} />
+      <ChartComponent type="line" data={data} options={options} />
     </div>
   )
 }
