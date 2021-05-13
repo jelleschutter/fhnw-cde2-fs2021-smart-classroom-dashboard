@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 
 import './Login.scss';
 import { login } from './authSlice';
-import { Button, TextField } from '@material-ui/core';
+import { Button, Grid, Paper, TextField } from '@material-ui/core';
 
 export const Login = () => {
 
@@ -20,11 +20,27 @@ export const Login = () => {
 
   return (
     <div className="login-wrapper">
-      <form onSubmit={handleSubmit}>
-        <TextField label="Username" onChange={(e) => setUsername(e.target.value)} />
-        <TextField type="password" label="Password" onChange={(e) => setPassword(e.target.value)} />
-        <Button type="submit">Login</Button>
-      </form>
+      <Paper>
+        <form onSubmit={handleSubmit}>
+          <Grid
+            container
+            direction="column"
+            justify="center"
+            alignItems="center"
+            spacing={2}
+          >
+            <Grid item>
+              <TextField label="Username" onChange={(e) => setUsername(e.target.value)} />
+            </Grid>
+            <Grid item>
+              <TextField type="password" label="Password" onChange={(e) => setPassword(e.target.value)} />
+            </Grid>
+            <Grid item>
+              <Button type="submit">Login</Button>
+            </Grid>
+          </Grid>
+        </form>
+      </Paper>
     </div>
   );
 }
