@@ -84,6 +84,16 @@ export const Chart = (props: Props) => {
         fill: false,
         backgroundColor: 'rgb(255, 205, 86)',
         borderColor: 'rgba(255, 205, 86, 0.2)',
+      },
+      {
+        label: 'Distance',
+        data: items.map(o => ({
+          x: o.insert_timestamp,
+          y: o.distance
+        })),
+        fill: false,
+        backgroundColor: 'rgb(75, 192, 192)',
+        borderColor: 'rgba(75, 192, 192, 0.2)',
       }
     ]
   };
