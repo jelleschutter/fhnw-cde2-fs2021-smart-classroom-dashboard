@@ -17,34 +17,41 @@ export const Chart = (props: Props) => {
   const auth = useSelector<RootState, AuthState>((state) => state.auth);
   const dispatch = useDispatch();
 
-  const fetchData = () => {
-    if (auth.loggedIn && props.sensor) {
-      const url = `https://glusfqycvwrucp9-db202012181437.adb.eu-zurich-1.oraclecloudapps.com/ords/sensor_datalake/sens/measurements?q={"sensor_uuid":{"$eq":"${props.sensor}"},"$orderby":{"insert_timestamp":"desc"}}`;
-      const headers = new Headers();
-      headers.set('Authorization', `Basic ${auth.token}`);
-      fetch(url, {
-        method: 'GET',
-        headers
-      })
-        .then(result => {
-          if (result.ok) {
-            return result.json();
-          }
-          dispatch(
-            logout()
-          );
-          return Promise.reject(new Error(result.statusText));
+  useEffect(() => {
+    const fetchData = () => {
+      if (auth.loggedIn && props.sensor) {
+        const url = `https://glusfqycvwrucp9-db202012181437.adb.eu-zurich-1.oraclecloudapps.com/ords/sensor_datalake/sens/measurements?q={"sensor_uuid":{"$eq":"${props.sensor}"},"$orderby":{"insert_timestamp":"desc"}}`;
+        const headers = new Headers();
+        headers.set('Authorization', `Basic ${auth.token}`);
+        fetch(url, {
+          method: 'GET',
+          headers
         })
-        .then((result) => {
-          setItems(result.items);
-        })
-        .catch((error) => console.log(error));
-    } else {
-      setItems([]);
+          .then(result => {
+            if (result.ok) {
+              return result.json();
+            }
+            dispatch(
+              logout()
+            );
+            return Promise.reject(new Error(result.statusText));
+          })
+          .then((result) => {
+            setItems(result.items);
+          })
+          .catch((error) => console.log(error));
+      } else {
+        setItems([]);
+      }
     }
-  }
 
-  useEffect(fetchData, [dispatch, props, auth]);
+    fetchData();
+
+    const id = setInterval(() => {
+      fetchData();
+    }, 30000);
+    return () => clearInterval(id);
+  }, [dispatch, props, auth]);
 
   const data = {
     datasets: [
