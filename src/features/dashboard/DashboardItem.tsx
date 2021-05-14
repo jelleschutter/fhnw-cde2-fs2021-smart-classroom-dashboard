@@ -76,19 +76,19 @@ export const DashboardItem = ({ sensor }: Props) => {
           CO2
         </Typography>
         <Typography variant="body1" component="p">
-          {latestMeasurement ? Math.round(latestMeasurement.co2) : ''} ppm
+          {latestMeasurement ? latestMeasurement.co2.toFixed(0) : ''} ppm
         </Typography>
         <Typography className={classes.attribute} color="textSecondary">
           Temperature
         </Typography>
         <Typography variant="body1" component="p">
-          {latestMeasurement ? Math.round(latestMeasurement.temperature) : ''} C°
+          {latestMeasurement ? latestMeasurement.temperature.toFixed(1) : ''} C°
         </Typography>
         <Typography className={classes.attribute} color="textSecondary">
           Humidity
         </Typography>
         <Typography variant="body1" component="p">
-          {latestMeasurement ? Math.round(latestMeasurement.humidity) : ''}%
+          {latestMeasurement ? latestMeasurement.humidity.toFixed(0) : ''}%
         </Typography>
       </CardContent>
       <CardActions>
