@@ -68,15 +68,16 @@ export const request = (url: string, query?: RestQuery, options?: Options) => {
 
 export const requestItems = <T extends unknown>(url: string, query?: RestQuery, options?: Options, items: T[] = []): Promise<T[]> => {
   return request(url, query, options).then((result) => {
+    const newItems = items.concat(result.items);
     if (result.hasMore) {
       const updatedOptions: Options = {
         offset: 0,
         ...options
       };
       updatedOptions.offset += result.count;
-      return requestItems(url, query, updatedOptions, result.items);
+      return requestItems(url, query, updatedOptions, newItems);
     }
-    return items.concat(result.items);
+    return newItems;
   });
 }
 
