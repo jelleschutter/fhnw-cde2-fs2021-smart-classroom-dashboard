@@ -32,7 +32,7 @@ export const Dashboard = () => {
       .catch((error) => {
         console.log(error);
       });
-  });
+  }, []);
 
   const dashboardItems = items.map(sensor => <DashboardItem key={sensor.uuid} sensor={sensor} />)
   return (
